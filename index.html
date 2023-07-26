@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luca's Calc</title>
+  </head>
+  <body>
+    <header>
+      <h1>If you've lost your casio...</h1>
+    </header>
+    <div class="calculator-container">
+      <article class="calculator">
+        <section class="calculator__screen"></section>
+        <section class="calculator__buttons">
+          <button>C</button>
+          <button>+/-</button>
+          <button>%</button>
+          <button>÷</button>
+          <button>7</button>
+          <button>8</button>
+          <button>9</button>
+          <button>x</button>
+          <button>4</button>
+          <button>5</button>
+          <button>6</button>
+          <button>-</button>
+          <button>1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>+</button>
+          <button>0</button>
+          <button>.</button>
+          <button>=</button>
+        </section>
+      </article>
+    </div>
+    <script type="module" src="/src/main.ts">
+      window.onload = giveButtonClass(buttonClassNames);
+      start();
+    </script>
+  </body>
+</html>
