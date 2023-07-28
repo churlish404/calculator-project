@@ -27,7 +27,7 @@ const buttons: HTMLButtonElement[] = [];
 
 // test array
 
-let testNumbers = [2, 4, 6];
+let testInput: (string | number)[] = [];
 
 /* DOM Element Variables */
 
@@ -61,20 +61,20 @@ const isButtonNull = (eventTarget: HTMLButtonElement) => {
 };
 
 // function to display a default value when load page
-const displayValue = (value: string) => {
+const displayValue = (testInputArr: (string | number)[]) => {
   if (isScreenNull(screen)) {
     return;
   } else {
-    screen!.innerText = value;
-    return `test`;
+    const displayString = testInputArr.join(" ");
+    screen!.innerText = displayString;
+    return;
   }
 };
 
 //function to update the display
 
-const updateDisplay = (buttonClicked: HTMLButtonElement) => {
-  const value = buttonClicked.textContent;
-  displayValue(value!);
+const updateDisplay = (testInputArr: (string | number)[]) => {
+  displayValue(testInputArr);
 };
 
 // function to handle button click
@@ -82,7 +82,12 @@ const handleClick = (event: Event) => {
   // storing clicked button and casting to HTMLButtonELement from EventTarget
   const button = event.currentTarget as HTMLButtonElement;
   const validButton = isButtonNull(button);
-  updateDisplay(validButton);
+  const validButtonValue = validButton.textContent;
+  // push to an array to store user input
+  // temp push to testNumbers array
+  testInput.push(validButtonValue!);
+  // get array and pass to display function
+  updateDisplay(testInput);
 };
 
 // function to get button elements and store in TS array
