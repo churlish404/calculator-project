@@ -2,6 +2,11 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 2rem;
 }
 
 .calculator-container {
@@ -14,11 +19,12 @@
 
 .calculator {
   border: solid black 3px;
+  background-color: #70777e;
   padding: 0.5em auto;
   height: 80vh;
   width: 80vw;
   display: block;
-  border-radius: 5px;
+  border-radius: 15px;
 
   * {
     margin: 0.5rem auto;
@@ -40,23 +46,51 @@
     margin: 1rem;
     width: 90%;
     height: 30%;
-    border: solid red 3px;
+    border: solid black 3px;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    font-size: 4rem;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
   }
 
   &__buttons {
+    background-color: black;
     width: 95%;
     height: 60%;
     border: solid black 3px;
-    padding: 1em;
+    padding: 0.5em;
     display: grid;
     grid-template-columns: repeat(4, minmax(50px, 1fr));
     grid-template-rows: repeat(5, 1fr);
     border-radius: 5px;
 
+    :active {
+      animation: button-effect 2s ease-out;
+    }
+
     button {
       width: 90%;
       border: solid black 2px;
       border-radius: 50%;
+      font-size: 1.5rem;
+    }
+
+    &--number {
+      background-color: #70777e;
+      color: white;
+    }
+
+    &--operations {
+      background-color: #f1c100;
+      color: white;
+    }
+    &--auxillary {
+      background-color: #d9e2eb;
+      color: black;
     }
 
     .zero {
@@ -66,5 +100,17 @@
       border-top-left-radius: 20% 100%;
       border-top-right-radius: 20% 100%;
     }
+  }
+}
+
+@keyframes button-effect {
+  100% {
+    background-color: inherit;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  0% {
+    background-color: white;
   }
 }

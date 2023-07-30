@@ -2,7 +2,6 @@ import "./style.scss";
 // Define global variables
 
 const buttonClassNames: string[] = [
-  "cancel",
   "sign",
   "percentage",
   "divide",
@@ -24,8 +23,11 @@ const buttonClassNames: string[] = [
 ];
 
 const buttons: HTMLButtonElement[] = [];
-const userInput: string[] = [];
+const initialInput: string[] = [];
 const operations = /[-\/+*]/g;
+let firstCalculation = true;
+// const calculations: {}[] = [];
+// let calculationIndex = 0;
 
 /* DOM Element Variables */
 
@@ -36,16 +38,16 @@ const cancel = document.querySelector(
 
 /* ______________________________________________________________________________ */
 
-/* Function definitions */
-// gives each button a class defined by "buttonClassNames" arr
 const start = () => {
+  /* Function definitions */
+  // gives each button (aside from cancel) a class defined by "buttonClassNames" arr
   const giveButtonClass = (buttonClassNames: string[]) => {
     const buttons = document.querySelectorAll("button");
     let counter = 0;
-    buttons.forEach((button) => {
-      button.classList.add(buttonClassNames[counter]);
+    for (let i = 1; i < buttons.length; i++) {
+      buttons[i].classList.add(buttonClassNames[counter]);
       counter++;
-    });
+    }
   };
 
   // function to check if screen is null
@@ -79,58 +81,70 @@ const start = () => {
   };
 
   // function to display a default value when load page
-  const displayCalc = (InputArr: string[]) => {
+  const displayCalc = (inputArr: string[]) => {
     if (isScreenNull(screen)) {
       return;
     } else {
-      const displayString = InputArr.join(" ");
+      const displayString = inputArr.join(" ");
       screen!.innerText = displayString;
-      return;
+      if (displayString.includes("=")) {
+        return;
+      }
     }
   };
 
+  //displays calculation result
   const displayResult = (result: number | undefined) => {
     if (typeof result !== undefined) {
       const resultString = result as unknown as string;
       screen!.innerText = resultString;
+      firstCalculation = false;
     }
+    return;
   };
 
   //function to update the display
   const updateDisplay = (inputArr: string[] | undefined) => {
+    const equals = /=/;
+
     if (typeof inputArr == undefined) {
       console.error("problem: inputArray is undefined");
-    } else if (inputArr.length === 0) {
-      console.log("array is empty");
-      return;
     }
-
-    const equals = /=/;
     // join array to use regex.test()
-    const inputAsString = inputArr.join("");
+    const inputAsString = inputArr!.join("");
     // if equals is present at end of the input array -> do calculation
-
-    /* NEED TO EDIT HOW DISPLAY RESETS AFTER DISPLAYING RESULT e.g. clear array */
-    if (equals.test(inputAsString[inputAsString.length - 1])) {
-      const result = evaluate(inputArr);
+    //NEED TO EDIT HERE
+    if (
+      equals.test(inputAsString[inputAsString.length - 1]) &&
+      firstCalculation
+    ) {
+      let result = evaluate(inputArr!);
       displayResult(result);
     } else {
-      displayCalc(inputArr);
+      displayCalc(inputArr!);
     }
   };
 
   // function to handle button click
   const handleClick = (event: Event) => {
+    // prevent bubbling so that individual button click results in multiple values being displayed
+    event.stopPropagation();
     // storing clicked button and casting to HTMLButtonELement from EventTarget
     const button = event.currentTarget as HTMLButtonElement;
     const validButton = isButtonNull(button);
     const validButtonValue = validButton.textContent;
     // push text of button to an array to store user input
-    userInput.push(validButtonValue!);
+    initialInput.push(validButtonValue!);
+
     // check array userInput isn't garbage
-    const validatedInput = validateInput(userInput);
+    const validatedInput = validateInput(initialInput);
     // pass to display function
     updateDisplay(validatedInput);
+  };
+
+  // function to handle clear button click;
+  const handleClearClick = (event: Event) => {
+    event.preventDefault;
   };
 
   // function to get button elements and store in TS array
@@ -218,11 +232,12 @@ const start = () => {
   getButtons();
 
   buttons.forEach((button) => {
-    button.addEventListener("click", handleClick);
+    if (button.className !== "cancel")
+      button.addEventListener("click", handleClick);
   });
 
   const validClear = isButtonNull(cancel);
-  validClear!.addEventListener("click", start);
+  validClear!.addEventListener("click", handleClearClick);
 };
 
 start();
