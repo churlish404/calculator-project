@@ -27,7 +27,8 @@ const buttons: HTMLButtonElement[] = [];
 
 // test array
 
-let testInput: (string | number)[] = [];
+const userInput: (string | number)[] = [];
+const operations = /[-\/+*]/g;
 
 /* DOM Element Variables */
 
@@ -35,6 +36,7 @@ const screen = document.querySelector(".calculator__screen") as HTMLElement;
 /* ______________________________________________________________________________ */
 
 /* Function definitions */
+// gives each button a class defined by "buttonClassNames" arr
 const giveButtonClass = (buttonClassNames: string[]) => {
   const buttons = document.querySelectorAll("button");
   let counter = 0;
@@ -61,20 +63,27 @@ const isButtonNull = (eventTarget: HTMLButtonElement) => {
 };
 
 // function to display a default value when load page
-const displayValue = (testInputArr: (string | number)[]) => {
+const displayValue = (InputArr: string[]) => {
   if (isScreenNull(screen)) {
     return;
   } else {
-    const displayString = testInputArr.join(" ");
+    const displayString = InputArr.join(" ");
     screen!.innerText = displayString;
     return;
   }
 };
 
 //function to update the display
-
-const updateDisplay = (testInputArr: (string | number)[]) => {
-  displayValue(testInputArr);
+const updateDisplay = (inputArr: string[]) => {
+  const equals = /=/;
+  // join array to use regex.test()
+  const inputAsString = inputArr.join("");
+  // if equals is present at end of the input array -> do calculation
+  if (equals.test(inputAsString[inputAsString.length - 1])) {
+    const result = evaluate(inputArr);
+    console.log(result);
+  }
+  displayValue(inputArr);
 };
 
 // function to handle button click
@@ -84,14 +93,12 @@ const handleClick = (event: Event) => {
   const validButton = isButtonNull(button);
   const validButtonValue = validButton.textContent;
   // push to an array to store user input
-  // temp push to testNumbers array
-  testInput.push(validButtonValue!);
-  // get array and pass to display function
-  updateDisplay(testInput);
+  userInput.push(validButtonValue!);
+  // pass to display function
+  updateDisplay(userInput);
 };
 
 // function to get button elements and store in TS array
-
 const getButtons = () => {
   const buttonElements = document.querySelectorAll("button");
   buttonElements.forEach((element: HTMLButtonElement) => {
@@ -103,13 +110,70 @@ const getButtons = () => {
 const add = (numberArray: number[]) => {
   let result: number = 0;
   numberArray.forEach((number: number) => {
-    result += number;
+    if (!isNaN(number)) {
+      result += number;
+    }
   });
   return result;
 };
 
 const subtract = (numberArray: number[]) => {
-  let result: number = numberArray[0] - numberArray[1];
+  let result = numberArray[0];
+  // removes start value so don't subtract off total
+  numberArray.shift();
+  numberArray.forEach((number) => {
+    if (!isNaN(number)) {
+      result -= number;
+    }
+  });
+  return result;
+};
+
+const multiply = (numberArray: number[]) => {
+  let result = 1;
+  numberArray.forEach((number) => {
+    if (!isNaN(number)) {
+      result *= number;
+    }
+  });
+  return result;
+};
+
+const divide = (numberArray: number[]) => {
+  let result = numberArray[0];
+  numberArray.shift();
+  numberArray.forEach((number) => {
+    if (!isNaN(number)) {
+      result /= number;
+    }
+  });
+  return result;
+};
+// flow-control functions ______________________________________
+
+const evaluate = (inputArr: string[]): number | undefined => {
+  const inputString = inputArr.join("").replace("x", "*").replace("÷", "/");
+  const expression = operations.exec(inputString as string);
+
+  const inputArrToNumbers = inputArr.map((input) => {
+    return Number(input);
+  });
+
+  let result: number | undefined;
+  switch (expression![0]) {
+    case "+":
+      result = add(inputArrToNumbers);
+      break;
+    case "-":
+      result = subtract(inputArrToNumbers);
+      break;
+    case "*":
+      result = multiply(inputArrToNumbers);
+      break;
+    case "/":
+      result = divide(inputArrToNumbers);
+      break;
+  }
   return result;
 };
 
