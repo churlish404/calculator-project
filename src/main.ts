@@ -22,6 +22,9 @@ const buttonClassNames: string[] = [
   "equals",
   "decimal",
 ];
+// global variables
+// user input arr
+let userInput: string[] = [];
 
 // get all HTML button elements store in an array
 const buttons = document.querySelectorAll("button");
@@ -30,7 +33,7 @@ const buttons = document.querySelectorAll("button");
 if (buttons.length === 0) {
   throw new Error("problem retrieving HTML buttons");
 }
-
+/* __________________________________________________________ */
 // function declarations
 const giveButtonClass = (buttonClassNames: string[]) => {
   const buttons = document.querySelectorAll("button");
@@ -40,7 +43,7 @@ const giveButtonClass = (buttonClassNames: string[]) => {
     counter++;
   });
 };
-
+/* __________________________________________________________ */
 // register button click store value of button
 const handleButtonClick = (event: Event) => {
   const button = event.currentTarget as HTMLButtonElement;
@@ -51,9 +54,27 @@ const handleButtonClick = (event: Event) => {
     console.log("clear");
   } else {
     const buttonValue: string = button.textContent!;
-    return buttonValue;
+    userInput.push(buttonValue);
   }
+  handleCalculation(userInput);
 };
+
+/* __________________________________________________________ */
+
+// function to accept values of handleButton click
+// assemble string
+// seperate numbers and operators
+
+const handleCalculation = (userInput: string[]) => {
+  const input = userInput.join("");
+  // if input string matches pattern of a number return to numbers array
+  const numbers = input.match(/-?\d+\.*\d*/g);
+  // likewise for operators
+  const operator = input.match(/[\/x+-]/);
+  result = evaluate(numbers, operator);
+};
+
+/* __________________________________________________________ */
 
 // function calls
 
