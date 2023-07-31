@@ -23,11 +23,7 @@ const buttonClassNames: string[] = [
 ];
 
 const buttons: HTMLButtonElement[] = [];
-const initialInput: string[] = [];
-const operations = /[-\/+*]/g;
-let firstCalculation = true;
-// const calculations: {}[] = [];
-// let calculationIndex = 0;
+let initialInput: string[] = [];
 
 /* DOM Element Variables */
 
@@ -68,14 +64,14 @@ const start = () => {
   };
 
   const validateInput = (userInput: string[]) => {
-    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    console.log("validate input" + userInput);
     // wanted to use includes() array method to check if array includes at least 1 number
     // in case user inputs just operators e.g. "+", "-"
     // used some() to check if is one of numbers array (0-9)
     // if no numbers in the array display error alert
     if (!numbers.some((i) => userInput.includes(i))) {
-      alert("Please enter a valid calculation");
+      alert("Please enter a valid calculation test");
       start();
     } else return userInput;
   };
@@ -98,7 +94,6 @@ const start = () => {
     if (typeof result !== undefined) {
       const resultString = result as unknown as string;
       screen!.innerText = resultString;
-      firstCalculation = false;
     }
     return;
   };
@@ -114,12 +109,13 @@ const start = () => {
     const inputAsString = inputArr!.join("");
     // if equals is present at end of the input array -> do calculation
     //NEED TO EDIT HERE
-    if (
-      equals.test(inputAsString[inputAsString.length - 1]) &&
-      firstCalculation
-    ) {
+    console.log("before conditional logic" + initialInput);
+    if (equals.test(inputAsString[inputAsString.length - 1])) {
       let result = evaluate(inputArr!);
       displayResult(result);
+
+      initialInput = [result.toString()];
+      console.log("after conditional logic" + initialInput);
     } else {
       displayCalc(inputArr!);
     }
@@ -127,6 +123,8 @@ const start = () => {
 
   // function to handle button click
   const handleClick = (event: Event) => {
+    const operations = /[-/+*]/g;
+    const number = /-?d+(.d+)?/;
     // prevent bubbling so that individual button click results in multiple values being displayed
     event.stopPropagation();
     // storing clicked button and casting to HTMLButtonELement from EventTarget
@@ -134,7 +132,10 @@ const start = () => {
     const validButton = isButtonNull(button);
     const validButtonValue = validButton.textContent;
     // push text of button to an array to store user input
-    initialInput.push(validButtonValue!);
+    console.log("Before exec" + validButtonValue);
+    let firstNumber = number.exec(validButtonValue!);
+    console.log(firstNumber);
+    // initialInput.push(validButtonValue!);
 
     // check array userInput isn't garbage
     const validatedInput = validateInput(initialInput);
@@ -200,7 +201,8 @@ const start = () => {
   };
   // flow-control functions ______________________________________
 
-  const evaluate = (inputArr: string[]): number | undefined => {
+  const evaluate = (inputArr: string[]): number => {
+    const operations = /[-/+*]/g;
     const inputString = inputArr.join("").replace("x", "*").replace("÷", "/");
     const expression = operations.exec(inputString as string);
 
@@ -208,7 +210,7 @@ const start = () => {
       return Number(input);
     });
 
-    let result: number | undefined;
+    let result: number;
     switch (expression![0]) {
       case "+":
         result = add(inputArrToNumbers);
@@ -222,6 +224,8 @@ const start = () => {
       case "/":
         result = divide(inputArrToNumbers);
         break;
+      default:
+        result = 0;
     }
     return result;
   };
