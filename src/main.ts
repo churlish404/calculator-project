@@ -25,6 +25,7 @@ const buttonClassNames: string[] = [
 // global variables
 // user input arr
 let userInput: string[] = [];
+const storedResults: number[] = [];
 
 // get all HTML button elements store in an array
 const buttons = document.querySelectorAll("button");
@@ -65,20 +66,39 @@ const handleButtonClick = (event: Event) => {
 
 // function to accept values of handleButton click
 // assemble string
-// seperate numbers and operators
+// separate numbers and operators
+// calls display function or
+// evaluate
 
 const handleCalculation = (userInput: string[]) => {
-  const input = userInput.join("");
+  let input = userInput.join("");
+  // indexing variable to track how many calculations have been performed
+  let calculationIndex: number = 0;
+  // variable true when input is "2+ " and false if "2+2" or "2+2="
+  let chainedOperator: boolean;
   // if input string matches pattern of a number return to numbers array
   const numbers = input.match(/-?\d+\.*\d*/g) as string[];
   // likewise for operators
-  const operator = input.match(/[\-÷+x]/g) as unknown as string[];
+  const operator = input.match(/[\-÷+x%]/g) as unknown as string[];
+  console.log(operator);
   const calculation = input.match(
     /[-?\d+\.*\d*)][\-÷+x][-?\d+\.*\d+]/g
   ) as string[];
+
   displayCalc(input);
+  // if (input[input.length - 1] == operator[calculationIndex]) {
+  //   chainedOperator = true;
+  //   chainedOperator = displayCalc(
+  //     input,
+  //     chainedOperator,
+  //     operator[calculationIndex]
+  //   );
+  //   calculationIndex++;
   if (calculation && input[input.length - 1] == "=") {
     evaluate(numbers, operator!);
+  } else if (input[input.length - 1] == "%") {
+    const formattedInput = Number(input.replace("%", "")) as number;
+    percentage(formattedInput);
   }
 };
 
@@ -121,6 +141,12 @@ const divide = (numberArr: number[]): number => {
   return result;
 };
 
+const percentage = (result: number) => {
+  result = result / 100;
+  console.log(result);
+  displayResult(result);
+};
+
 // flow-control functions ______________________________________
 
 const evaluate = (stringArr: string[], operator: string[]) => {
@@ -151,8 +177,8 @@ const evaluate = (stringArr: string[], operator: string[]) => {
       console.log("default used");
   }
 
-  // push result into first position in inputArr
-  const storedResults = [result];
+  // add result into first position in storedResults
+  storedResults.push(result);
 
   // pass result to display function
   displayResult(result);
@@ -160,12 +186,23 @@ const evaluate = (stringArr: string[], operator: string[]) => {
 /* __________________________________________________________ */
 
 // display functions
-const displayCalc = (calculation: string) => {
+const displayCalc = (
+  calculation: string,
+  chainedOperator?: boolean,
+  operator?: string
+): boolean => {
   screen.innerHTML = calculation;
+  const numberQuantity = calculation.replace(/[^0-9]/g, "").length;
+
+  if (chainedOperator && numberQuantity >= 2) {
+    screen.innerHTML = `${storedResults[0]} ${operator}`;
+    chainedOperator = false;
+  }
+  return chainedOperator as boolean;
 };
 
 const displayResult = (result: number) => {
-  const resultAsString = result.toString();
+  const resultAsString = result.toFixed(10).toString();
   screen.innerHTML = resultAsString;
 };
 
