@@ -1,6 +1,6 @@
 @font-face {
   font-family: "tech";
-  src: url(../public/assets/digital-7-font/Digital7Mono-Yz9J4.ttf);
+  src: url(./assets/digital-7-font/Digital7Mono-Yz9J4.ttf);
 }
 
 * {
@@ -20,6 +20,7 @@ h1 {
   align-items: center;
   height: 100vh;
   width: 100%;
+  background-color: burlywood;
 }
 
 .calculator {
@@ -122,6 +123,9 @@ h1 {
       margin-left: 2rem;
       max-width: 45%;
       max-height: 70%;
+      &__screen {
+        font-size: 5rem;
+      }
     }
   }
 }

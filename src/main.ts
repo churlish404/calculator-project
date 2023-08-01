@@ -46,6 +46,14 @@ const giveButtonClass = (buttonClassNames: string[]) => {
     counter++;
   });
 };
+const clearScreen = () => {
+  screen.textContent = " ";
+  userInput = [];
+};
+
+const changeSign = (number: string) => {
+  return Number(number) * -1;
+};
 /* __________________________________________________________ */
 // register button click store value of button
 const handleButtonClick = (event: Event) => {
@@ -53,11 +61,16 @@ const handleButtonClick = (event: Event) => {
 
   // if is clear button call clear() function
   if (button.classList.contains("clear-all")) {
-    // call clear function here
-    console.log("clear");
+    clearScreen();
+    return;
   } else {
     const buttonValue: string = button.textContent!;
-    userInput.push(buttonValue);
+    if (button.classList.contains("sign")) {
+      changeSign(userInput[0]);
+      userInput.unshift(`-`);
+    } else {
+      userInput.push(buttonValue);
+    }
   }
   handleCalculation(userInput);
 };
@@ -80,7 +93,6 @@ const handleCalculation = (userInput: string[]) => {
   const numbers = input.match(/-?\d+\.*\d*/g) as string[];
   // likewise for operators
   const operator = input.match(/[\-÷+x%]/g) as unknown as string[];
-  console.log(operator);
   const calculation = input.match(
     /[-?\d+\.*\d*)][\-÷+x][-?\d+\.*\d+]/g
   ) as string[];
@@ -151,7 +163,7 @@ const percentage = (result: number) => {
 
 const evaluate = (stringArr: string[], operator: string[]) => {
   // replace to match regex return
-  operator[0].toString().replace("x", "*");
+  operator[operator.length - 1].toString().replace("x", "*");
   // e.g. convert "12" to 12 for arithmetic
   const numberArr = stringArr.map((number) => {
     return Number(number);
@@ -159,7 +171,7 @@ const evaluate = (stringArr: string[], operator: string[]) => {
 
   let result: number;
   // based on operator perform the relevant calculation
-  switch (operator[0]) {
+  switch (operator[operator.length - 1]) {
     case "+":
       result = add(numberArr);
       break;
@@ -179,6 +191,7 @@ const evaluate = (stringArr: string[], operator: string[]) => {
 
   // add result into first position in storedResults
   storedResults.push(result);
+  let latestResult = storedResults[storedResults.length - 1];
 
   // pass result to display function
   displayResult(result);
@@ -202,8 +215,8 @@ const displayCalc = (
 };
 
 const displayResult = (result: number) => {
-  const resultAsString = result.toFixed(10).toString();
-  screen.innerHTML = resultAsString;
+  const resultAsString = result.toFixed(2).toString();
+  screen.textContent = resultAsString;
 };
 
 /* __________________________________________________________ */
