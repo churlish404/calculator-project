@@ -1,7 +1,25 @@
+@font-face {
+  font-family: "tech";
+  src: url(./assets/digital-7-font/Digital7Mono-Yz9J4.ttf);
+}
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  text-align: center;
+  list-style-type: none;
+}
+
+h1 {
+  margin-top: 4rem;
+}
+
+body {
+  background-color: #f1c100;
+}
+
+.sales-pitch {
+  display: none;
 }
 
 .calculator-container {
@@ -14,11 +32,16 @@
 
 .calculator {
   border: solid black 3px;
+  background-color: #70777e;
   padding: 0.5em auto;
   height: 80vh;
   width: 80vw;
   display: block;
+<<<<<<< Updated upstream
   border-radius: 5px;
+=======
+  border-radius: 15px;
+>>>>>>> Stashed changes
 }
 .calculator * {
   margin: 0.5rem auto;
@@ -30,6 +53,7 @@
   margin: 1rem;
   width: 90%;
   height: 30%;
+<<<<<<< Updated upstream
   border: solid red 3px;
 }
 .calculator__buttons {
@@ -37,11 +61,30 @@
   height: 60%;
   border: solid black 3px;
   padding: 1em;
+=======
+  border: solid black 3px;
+  border-radius: 10px;
+  background-color: black;
+  color: lime;
+  font-size: 4rem;
+  font-family: "tech", sans-serif;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.calculator__buttons {
+  background-color: black;
+  width: 95%;
+  height: 60%;
+  border: solid black 3px;
+  padding: 0.5em;
+>>>>>>> Stashed changes
   display: grid;
   grid-template-columns: repeat(4, minmax(50px, 1fr));
   grid-template-rows: repeat(5, 1fr);
   border-radius: 5px;
 }
+<<<<<<< Updated upstream
 .calculator__buttons button {
   width: 90%;
   border: solid black 2px;
@@ -53,4 +96,105 @@
   border-bottom-right-radius: 20% 100%;
   border-top-left-radius: 20% 100%;
   border-top-right-radius: 20% 100%;
+=======
+.calculator__buttons :active {
+  animation: button-effect 2s ease-out;
+}
+.calculator__buttons button {
+  width: 90%;
+  border: solid black 2px;
+  border-radius: 10%;
+  font-size: 1.5rem;
+}
+.calculator__buttons--number {
+  background-color: #70777e;
+  color: white;
+}
+.calculator__buttons--operations {
+  background-color: #f1c100;
+  color: white;
+}
+.calculator__buttons--auxillary {
+  background-color: #d9e2eb;
+  color: black;
+}
+.calculator__buttons .zero {
+  grid-column: 1/3;
+  border-bottom-left-radius: 20% 50%;
+  border-bottom-right-radius: 20% 50%;
+  border-top-left-radius: 20% 50%;
+  border-top-right-radius: 20% 50%;
+}
+
+@media screen and (min-width: 600px) {
+  .calculator {
+    width: 45vw;
+    height: 75vh;
+  }
+}
+@media screen and (min-width: 800px) {
+  .calculator {
+    width: 45vw;
+    height: 80vh;
+  }
+}
+@media screen and (min-width: 1024px) {
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .calculator-container {
+    justify-content: center;
+    width: 50%;
+  }
+  .calculator-container .calculator {
+    margin-left: 4rem;
+    max-width: 45%;
+    max-height: 70%;
+  }
+  .calculator-container .calculator__screen {
+    font-size: 5rem;
+  }
+  .sales-pitch {
+    display: block;
+    margin-right: 3rem;
+  }
+  .sales-pitch * span {
+    font-size: 4rem;
+    font-weight: bolder;
+    color: lime;
+    -webkit-text-stroke: 2px black;
+  }
+  .sales-pitch h2 {
+    font-size: 3rem;
+  }
+  .sales-pitch p,
+  .sales-pitch ul {
+    font-size: 2rem;
+    line-height: 1.5;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .calculator {
+    margin-left: 2rem;
+    width: 35%;
+    max-width: 40%;
+    max-height: 60%;
+  }
+  .calculator__screen {
+    font-size: 5rem;
+  }
+}
+@keyframes button-effect {
+  100% {
+    background-color: inherit;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  0% {
+    background-color: white;
+  }
+>>>>>>> Stashed changes
 }/*# sourceMappingURL=style.css.map */

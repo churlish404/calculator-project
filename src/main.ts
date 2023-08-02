@@ -39,16 +39,13 @@ if (!buttons.length || !screen) {
 /* __________________________________________________________ */
 // function declarations
 const giveButtonClass = (buttonClassNames: string[]) => {
-  const buttons = document.querySelectorAll("button");
   let counter = 0;
   buttons.forEach((button) => {
-    if (button.className !== "cancel")
-      button.addEventListener("click", handleClick);
+    button.classList.add(buttonClassNames[counter]);
+    counter++;
   });
-
-  const validClear = isButtonNull(cancel);
-  validClear!.addEventListener("click", handleClearClick);
 };
+
 const clearScreen = () => {
   screen.textContent = " ";
   userInput = [];
@@ -70,7 +67,7 @@ const handleButtonClick = (event: Event) => {
   } else {
     const buttonValue: string = button.textContent!;
     if (button.classList.contains("sign")) {
-      // changeSign function returns appropriate number to array
+      // changeSign function returns number to array
       changeSign(userInput[0]);
     } else {
       userInput.push(buttonValue);
@@ -89,34 +86,23 @@ const handleButtonClick = (event: Event) => {
 
 const handleCalculation = (userInput: string[]) => {
   let input = userInput.join("");
-  // indexing variable to track how many calculations have been performed
-  let calculationIndex: number = 0;
-  // variable true when input is "2+ " and false if "2+2" or "2+2="
-  let chainedOperator: boolean;
-  // if input string matches pattern of a number return to numbers array
+  // // if input string matches pattern of a number return to numbers array
   const numbers = input.match(/-?\d+\.*\d*/g) as string[];
   // likewise for operators
   const operator = input.match(/[\-÷+x%]/g) as unknown as string[];
   const calculation = input.match(
     /[-?\d+\.*\d*)][\-÷+x][-?\d+\.*\d+]/g
   ) as string[];
-  console.log(numbers);
-  console.log(calculation);
+
   displayCalc(input);
-  // if (input[input.length - 1] == operator[calculationIndex]) {
-  //   chainedOperator = true;
-  //   chainedOperator = displayCalc(
-  //     input,
-  //     chainedOperator,
-  //     operator[calculationIndex]
-  //   );
-  //   calculationIndex++;
+
   if (calculation && input[input.length - 1] == "=") {
     evaluate(numbers, operator!);
   } else if (input[input.length - 1] == "%") {
     const formattedInput = Number(input.replace("%", "")) as number;
     percentage(formattedInput);
   }
+  return;
 };
 
 // operation functions
@@ -160,7 +146,6 @@ const divide = (numberArr: number[]): number => {
 
 const percentage = (result: number) => {
   result = result / 100;
-  console.log(result);
   displayResult(result);
 };
 
@@ -205,17 +190,10 @@ const evaluate = (stringArr: string[], operator: string[]) => {
 // display functions
 const displayCalc = (
   calculation: string,
-  chainedOperator?: boolean,
-  operator?: string
-): boolean => {
+  operator?: string,
+  storedResults?: number[]
+) => {
   screen.innerHTML = calculation;
-  const numberQuantity = calculation.replace(/[^0-9]/g, "").length;
-
-  if (chainedOperator && numberQuantity >= 2) {
-    screen.innerHTML = `${storedResults[0]} ${operator}`;
-    chainedOperator = false;
-  }
-  return chainedOperator as boolean;
 };
 
 const displayResult = (result: number) => {
