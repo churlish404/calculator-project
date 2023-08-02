@@ -1,7 +1,8 @@
 import "./style.scss";
-// Define global variables
 
+// strings array to store text on buttons and assign grid area
 const buttonClassNames: string[] = [
+  "clear-all",
   "sign",
   "percentage",
   "divide",
@@ -21,220 +22,25 @@ const buttonClassNames: string[] = [
   "equals",
   "decimal",
 ];
+// global variables
+// user input arr
+let userInput: string[] = [];
+const storedResults: number[] = [];
 
-const buttons: HTMLButtonElement[] = [];
-let initialInput: string[] = [];
+// get all HTML button elements store in an array
+const buttons = document.querySelectorAll("button");
+// get screen element to display calculations and results
+const screen = document.querySelector(".calculator__screen");
 
-/* DOM Element Variables */
-
-const screen = document.querySelector(".calculator__screen") as HTMLElement;
-const cancel = document.querySelector(
-  ".calculator__buttons--operations"
-) as HTMLButtonElement;
-
-/* ______________________________________________________________________________ */
-
-const start = () => {
-  /* Function definitions */
-  // gives each button (aside from cancel) a class defined by "buttonClassNames" arr
-  const giveButtonClass = (buttonClassNames: string[]) => {
-    const buttons = document.querySelectorAll("button");
-    let counter = 0;
-    for (let i = 1; i < buttons.length; i++) {
-      buttons[i].classList.add(buttonClassNames[counter]);
-      counter++;
-    }
-  };
-
-  // function to check if screen is null
-  const isScreenNull = (element: HTMLElement) => {
-    if (!element) {
-      throw new Error("Problem with screen element");
-    }
-    return false;
-  };
-
-  // function to check if button is null
-  const isButtonNull = (eventTarget: HTMLButtonElement): HTMLButtonElement => {
-    if (eventTarget === null) {
-      throw new Error("Problem with button element");
-    } else {
-      return eventTarget;
-    }
-  };
-
-  const validateInput = (userInput: string[]) => {
-    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    console.log("validate input" + userInput);
-    // wanted to use includes() array method to check if array includes at least 1 number
-    // in case user inputs just operators e.g. "+", "-"
-    // used some() to check if is one of numbers array (0-9)
-    // if no numbers in the array display error alert
-    if (!numbers.some((i) => userInput.includes(i))) {
-      alert("Please enter a valid calculation test");
-      start();
-    } else return userInput;
-  };
-
-  // function to display a default value when load page
-  const displayCalc = (inputArr: string[]) => {
-    if (isScreenNull(screen)) {
-      return;
-    } else {
-      const displayString = inputArr.join(" ");
-      screen!.innerText = displayString;
-      if (displayString.includes("=")) {
-        return;
-      }
-    }
-  };
-
-  //displays calculation result
-  const displayResult = (result: number | undefined) => {
-    if (typeof result !== undefined) {
-      const resultString = result as unknown as string;
-      screen!.innerText = resultString;
-    }
-    return;
-  };
-
-  //function to update the display
-  const updateDisplay = (inputArr: string[] | undefined) => {
-    const equals = /=/;
-
-    if (typeof inputArr == undefined) {
-      console.error("problem: inputArray is undefined");
-    }
-    // join array to use regex.test()
-    const inputAsString = inputArr!.join("");
-    // if equals is present at end of the input array -> do calculation
-    //NEED TO EDIT HERE
-    console.log("before conditional logic" + initialInput);
-    if (equals.test(inputAsString[inputAsString.length - 1])) {
-      let result = evaluate(inputArr!);
-      displayResult(result);
-
-      initialInput = [result.toString()];
-      console.log("after conditional logic" + initialInput);
-    } else {
-      displayCalc(inputArr!);
-    }
-  };
-
-  // function to handle button click
-  const handleClick = (event: Event) => {
-    const operations = /[-/+*]/g;
-    const number = /-?d+(.d+)?/;
-    // prevent bubbling so that individual button click results in multiple values being displayed
-    event.stopPropagation();
-    // storing clicked button and casting to HTMLButtonELement from EventTarget
-    const button = event.currentTarget as HTMLButtonElement;
-    const validButton = isButtonNull(button);
-    const validButtonValue = validButton.textContent;
-    // push text of button to an array to store user input
-    console.log("Before exec" + validButtonValue);
-    let firstNumber = number.exec(validButtonValue!);
-    console.log(firstNumber);
-    // initialInput.push(validButtonValue!);
-
-    // check array userInput isn't garbage
-    const validatedInput = validateInput(initialInput);
-    // pass to display function
-    updateDisplay(validatedInput);
-  };
-
-  // function to handle clear button click;
-  const handleClearClick = (event: Event) => {
-    event.preventDefault;
-  };
-
-  // function to get button elements and store in TS array
-  const getButtons = () => {
-    const buttonElements = document.querySelectorAll("button");
-    buttonElements.forEach((element: HTMLButtonElement) => {
-      buttons.push(element);
-    });
-  };
-
-  // operation functions
-  const add = (numberArray: number[]) => {
-    let result: number = 0;
-    numberArray.forEach((number: number) => {
-      if (!isNaN(number)) {
-        result += number;
-      }
-    });
-    return result;
-  };
-
-  const subtract = (numberArray: number[]) => {
-    let result = numberArray[0];
-    // removes start value so don't subtract off total
-    numberArray.shift();
-    numberArray.forEach((number) => {
-      if (!isNaN(number)) {
-        result -= number;
-      }
-    });
-    return result;
-  };
-
-  const multiply = (numberArray: number[]) => {
-    let result = 1;
-    numberArray.forEach((number) => {
-      if (!isNaN(number)) {
-        result *= number;
-      }
-    });
-    return result;
-  };
-
-  const divide = (numberArray: number[]) => {
-    let result = numberArray[0];
-    numberArray.shift();
-    numberArray.forEach((number) => {
-      if (!isNaN(number)) {
-        result /= number;
-      }
-    });
-    return result;
-  };
-  // flow-control functions ______________________________________
-
-  const evaluate = (inputArr: string[]): number => {
-    const operations = /[-/+*]/g;
-    const inputString = inputArr.join("").replace("x", "*").replace("÷", "/");
-    const expression = operations.exec(inputString as string);
-
-    const inputArrToNumbers = inputArr.map((input) => {
-      return Number(input);
-    });
-
-    let result: number;
-    switch (expression![0]) {
-      case "+":
-        result = add(inputArrToNumbers);
-        break;
-      case "-":
-        result = subtract(inputArrToNumbers);
-        break;
-      case "*":
-        result = multiply(inputArrToNumbers);
-        break;
-      case "/":
-        result = divide(inputArrToNumbers);
-        break;
-      default:
-        result = 0;
-    }
-    return result;
-  };
-
-  // function calls
-  /* _______________________________________________________________________*/
-  giveButtonClass(buttonClassNames);
-  getButtons();
-
+// checking in case querySelectorAll() has returned empty NodeList
+if (!buttons.length || !screen) {
+  throw new Error("problem retrieving HTML buttons");
+}
+/* __________________________________________________________ */
+// function declarations
+const giveButtonClass = (buttonClassNames: string[]) => {
+  const buttons = document.querySelectorAll("button");
+  let counter = 0;
   buttons.forEach((button) => {
     if (button.className !== "cancel")
       button.addEventListener("click", handleClick);
@@ -243,5 +49,187 @@ const start = () => {
   const validClear = isButtonNull(cancel);
   validClear!.addEventListener("click", handleClearClick);
 };
+const clearScreen = () => {
+  screen.textContent = " ";
+  userInput = [];
+};
 
-start();
+const changeSign = (number: string) => {
+  userInput.unshift(`-`);
+  return Number(number) * -1;
+};
+/* __________________________________________________________ */
+// register button click store value of button
+const handleButtonClick = (event: Event) => {
+  const button = event.currentTarget as HTMLButtonElement;
+
+  // if is clear button call clear() function
+  if (button.classList.contains("clear-all")) {
+    clearScreen();
+    return;
+  } else {
+    const buttonValue: string = button.textContent!;
+    if (button.classList.contains("sign")) {
+      // changeSign function returns appropriate number to array
+      changeSign(userInput[0]);
+    } else {
+      userInput.push(buttonValue);
+    }
+  }
+  handleCalculation(userInput);
+};
+
+/* __________________________________________________________ */
+
+// function to accept values of handleButton click
+// assemble string
+// separate numbers and operators
+// calls display function or
+// evaluate
+
+const handleCalculation = (userInput: string[]) => {
+  let input = userInput.join("");
+  // indexing variable to track how many calculations have been performed
+  let calculationIndex: number = 0;
+  // variable true when input is "2+ " and false if "2+2" or "2+2="
+  let chainedOperator: boolean;
+  // if input string matches pattern of a number return to numbers array
+  const numbers = input.match(/-?\d+\.*\d*/g) as string[];
+  // likewise for operators
+  const operator = input.match(/[\-÷+x%]/g) as unknown as string[];
+  const calculation = input.match(
+    /[-?\d+\.*\d*)][\-÷+x][-?\d+\.*\d+]/g
+  ) as string[];
+  console.log(numbers);
+  console.log(calculation);
+  displayCalc(input);
+  // if (input[input.length - 1] == operator[calculationIndex]) {
+  //   chainedOperator = true;
+  //   chainedOperator = displayCalc(
+  //     input,
+  //     chainedOperator,
+  //     operator[calculationIndex]
+  //   );
+  //   calculationIndex++;
+  if (calculation && input[input.length - 1] == "=") {
+    evaluate(numbers, operator!);
+  } else if (input[input.length - 1] == "%") {
+    const formattedInput = Number(input.replace("%", "")) as number;
+    percentage(formattedInput);
+  }
+};
+
+// operation functions
+const add = (numberArr: number[]): number => {
+  let result: number = 0;
+  numberArr.forEach((number: number) => {
+    result += number;
+  });
+  return result;
+};
+
+const subtract = (numberArr: number[]): number => {
+  let result = numberArr[0];
+  // removes start value so don't subtract off total
+  numberArr.shift();
+  numberArr.forEach((number) => {
+    // regex appending - sign to every number following first digit
+    // multiply by -1 to reverse
+    number = number * -1;
+    result -= number;
+  });
+  return result;
+};
+
+const multiply = (numberArr: number[]): number => {
+  let result = 1;
+  numberArr.forEach((number) => {
+    result *= number;
+  });
+  return result;
+};
+
+const divide = (numberArr: number[]): number => {
+  let result = numberArr[0];
+  numberArr.shift();
+  numberArr.forEach((number) => {
+    result /= number;
+  });
+  return result;
+};
+
+const percentage = (result: number) => {
+  result = result / 100;
+  console.log(result);
+  displayResult(result);
+};
+
+// flow-control functions ______________________________________
+
+const evaluate = (stringArr: string[], operator: string[]) => {
+  // replace to match regex return
+  operator[operator.length - 1].toString().replace("x", "*");
+  // e.g. convert "12" to 12 for arithmetic
+  const numberArr = stringArr.map((number) => {
+    return Number(number);
+  });
+
+  let result: number;
+  // based on operator perform the relevant calculation
+  switch (operator[operator.length - 1]) {
+    case "+":
+      result = add(numberArr);
+      break;
+    case "-":
+      result = subtract(numberArr);
+      break;
+    case "x":
+      result = multiply(numberArr);
+      break;
+    case "÷":
+      result = divide(numberArr);
+      break;
+    default:
+      result = 0;
+      console.log("default used");
+  }
+
+  // add result into first position in storedResults
+  storedResults.push(result);
+
+  // pass result to display function
+  displayResult(result);
+};
+/* __________________________________________________________ */
+
+// display functions
+const displayCalc = (
+  calculation: string,
+  chainedOperator?: boolean,
+  operator?: string
+): boolean => {
+  screen.innerHTML = calculation;
+  const numberQuantity = calculation.replace(/[^0-9]/g, "").length;
+
+  if (chainedOperator && numberQuantity >= 2) {
+    screen.innerHTML = `${storedResults[0]} ${operator}`;
+    chainedOperator = false;
+  }
+  return chainedOperator as boolean;
+};
+
+const displayResult = (result: number) => {
+  const resultAsString = result.toFixed(2).toString();
+  screen.textContent = resultAsString;
+};
+
+/* __________________________________________________________ */
+
+// function calls
+
+giveButtonClass(buttonClassNames);
+
+//add event listener to all buttons
+buttons.forEach((button) => {
+  button.addEventListener("click", handleButtonClick);
+});

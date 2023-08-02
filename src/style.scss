@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "tech";
+  src: url(./assets/digital-7-font/Digital7Mono-Yz9J4.ttf);
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -15,6 +20,7 @@ h1 {
   align-items: center;
   height: 100vh;
   width: 100%;
+  background-color: burlywood;
 }
 
 .calculator {
@@ -33,14 +39,6 @@ h1 {
   button {
     display: inline-block;
   }
-  // &__screen::before {
-  //   content: "";
-  //   display: block;
-  //   width: 105%;
-  //   height: 107%;
-  //   border: black 3px solid;
-  //   transform: translate(-0.7rem, -0.5rem);
-  // }
 
   &__screen {
     margin: 1rem;
@@ -51,6 +49,7 @@ h1 {
     background-color: black;
     color: white;
     font-size: 4rem;
+    font-family: "tech", sans-serif;
 
     display: flex;
     justify-content: flex-end;
@@ -99,6 +98,34 @@ h1 {
       border-bottom-right-radius: 20% 100%;
       border-top-left-radius: 20% 100%;
       border-top-right-radius: 20% 100%;
+    }
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .calculator {
+    width: 75vw;
+    height: 75vh;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .calculator {
+    width: 65vw;
+    height: 80vh;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .calculator-container {
+    justify-content: flex-start;
+    .calculator {
+      margin-left: 2rem;
+      max-width: 45%;
+      max-height: 70%;
+      &__screen {
+        font-size: 5rem;
+      }
     }
   }
 }
