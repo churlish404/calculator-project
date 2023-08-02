@@ -52,6 +52,7 @@ const clearScreen = () => {
 };
 
 const changeSign = (number: string) => {
+  userInput.unshift(`-`);
   return Number(number) * -1;
 };
 /* __________________________________________________________ */
@@ -66,8 +67,8 @@ const handleButtonClick = (event: Event) => {
   } else {
     const buttonValue: string = button.textContent!;
     if (button.classList.contains("sign")) {
+      // changeSign function returns appropriate number to array
       changeSign(userInput[0]);
-      userInput.unshift(`-`);
     } else {
       userInput.push(buttonValue);
     }
@@ -96,7 +97,8 @@ const handleCalculation = (userInput: string[]) => {
   const calculation = input.match(
     /[-?\d+\.*\d*)][\-÷+x][-?\d+\.*\d+]/g
   ) as string[];
-
+  console.log(numbers);
+  console.log(calculation);
   displayCalc(input);
   // if (input[input.length - 1] == operator[calculationIndex]) {
   //   chainedOperator = true;
@@ -191,7 +193,6 @@ const evaluate = (stringArr: string[], operator: string[]) => {
 
   // add result into first position in storedResults
   storedResults.push(result);
-  let latestResult = storedResults[storedResults.length - 1];
 
   // pass result to display function
   displayResult(result);
